@@ -1,6 +1,10 @@
 package main
 
-import ("fmt","log","net/http");
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
 
 func formHandle(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -15,7 +19,7 @@ func formHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func helloHandle( w http.RepsonseWriter, r *http.Request) {
+func helloHandle(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/hello" {
 		http.Error(w, "404 not found -3-", http.StatusNotFound)
@@ -33,14 +37,13 @@ func helloHandle( w http.RepsonseWriter, r *http.Request) {
 
 func main() {
 
-	fileServer := http.FileServer(http.Dir('./static')) // Open files from the static folder -3-
-	http.Handle("/",fileServer)
-	http.HandlerFunc("/form",formHandle)
-	http.HandlerFunc("/hello",helloHandle)
+	fileServer := http.FileServer(http.Dir("./static"))
+	http.Handle("/", fileServer)
+	http.HandleFunc("/form", formHandle)
+	http.HandleFunc("/hello", helloHandle)
 
 	fmt.Printf("Starting server at port 8000\n")
-	if err := http.ListerAndServer(":8000",nil); err != nil {
+	if err := http.ListenAndServe(":8000",nil); err != nil {
 		log.Fatal(err)
 	}
-
 }
